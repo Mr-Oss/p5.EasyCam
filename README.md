@@ -1,3 +1,4 @@
+
 ![MultiView](screenshots/RandomBoxes_crop.jpg)
 
 
@@ -21,9 +22,11 @@ To get started quickly with EasyCam, take a look at the following tutorial on Op
 
 #### via npm
 
+---
+```markdown
+npm i @micrub/p5.easycam.js"
 ```
-npm i p5.EasyCamera
-```
+---
 
 ### Examples
 
@@ -50,7 +53,8 @@ For a simple first-person point-of-view p5.js camera library, take a look at p5.
 
 ### Usage
 
-```javascript
+---
+```js
 function setup() { 
   createCanvas(windowWidth, windowHeight, WEBGL);
   
@@ -67,6 +71,7 @@ function draw(){
   box(200);
 }
 ```
+---
 To control the movement of the camera:
 
 **rotate** around the look-at point  
@@ -118,7 +123,8 @@ Original (presumed abandoned) fork source: https://github.com/diwi/p5.EasyCam
 
 ### Camera Setup
 
-```javascript
+---
+```js
 // constructor
 new Dw.EasyCam(p5.RendererGL, state);
 new Dw.EasyCam(p5.RendererGL, {
@@ -141,12 +147,14 @@ new Dw.EasyCam(p5.RendererGL, {distance:z});
 new Dw.EasyCam(p5.RendererGL, {distance:z, center:[x,y,z]});
   ... 
 ```
+---
 
 The constructors above return an EasyCam object whose methods are listed below.
 
 ### Camera Methods
 
-```javascript
+---
+```js
 // CAMERA, MISC
 setCanvas(renderer) // webgl-renderer
 getCanvas()
@@ -212,10 +220,12 @@ reset(duration)
 beginHUD(renderer, w, h)
 endHUD(renderer)
 ```
+---
 
 ### Camera State Object
 
-```javascript
+---
+```js
 var easy=createEasyCam();
 let state = {
   distance : z,                 // scalar
@@ -224,6 +234,7 @@ let state = {
 };
 easy.setState(state, 1000); // animate to state over the period of 1 second
 ```
+---
 
 Example: [openprocessing](https://www.openprocessing.org/sketch/622115)
 
