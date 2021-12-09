@@ -17,6 +17,13 @@ To get started quickly with EasyCam, take a look at the following tutorial on Op
 - [CDN: p5.easycam.js](https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.js) and [p5.easycam.min.js](https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.min.js)
 - [All Releases](https://github.com/freshfork/p5.EasyCam/releases)
 
+### Installation
+
+#### via npm
+
+```
+npm i p5.EasyCamera
+```
 
 ### Examples
 
