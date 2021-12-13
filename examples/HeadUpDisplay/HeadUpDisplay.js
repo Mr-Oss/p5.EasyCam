@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 
 const D = 500;
-const SIZE = 5;
+const SIZE = 1;
+const HUD_PROP_TPL = _.template(getTemplateById('tpl-hud-prop'));
 const HUD_DATA_STRUCT = [
   ['gpu_renderer',
     'wgl_version',
@@ -15,16 +16,18 @@ const HUD_DATA_STRUCT = [
     'Rotation',
   ],
 ];
+
 let grid; let easycam; let hudStruct;
+
 /**
- * Return hml of emmbeded template by it's id
+ * Return hml of embedded template by it's id
  * @param {any} id
  * @return {any}
  */
 function getTemplateById(id) {
   return $('#' + id).html();
 }
-const hudPropTpl = _.template(getTemplateById('tpl-hud-prop'));
+
 /**
  * Setup WEBGL environment with p5.EasyCamera and debugging HUD
  * @return {void}
@@ -47,9 +50,7 @@ function setup() {
   displayHUD(hudStruct);
 
   grid = createGrid(SIZE);
-  // weightSize = getWeightSize(SIZE);
 }
-
 
 /**
  * Initialize hud drawing handlers
@@ -99,7 +100,7 @@ function displayHUD(hudStruct, verbose = false) {
 
   const propsHtml = hudStruct.map((property, index) => {
     const [label, fnk] = property;
-    return hudPropTpl({label, value: fnk(state, easycam)});
+    return HUD_PROP_TPL({label, value: fnk(state, easycam)});
   });
   hudDom.elt.innerHTML = propsHtml.join('');
   easycam.endHUD();
@@ -111,7 +112,6 @@ function displayHUD(hudStruct, verbose = false) {
  */
 function draw() {
   background(220);
-
 
   // projection
   perspective(60 * PI / 180, width / height, 1, 5000);
@@ -130,9 +130,41 @@ function draw() {
   displayIcons();
   // HeadUpDisplay
   displayHUD(hudStruct);
+  // weightSize = getWeightSize(SIZE);
+  drawGrid(grid);
 }
-
-
+// eslint-disable-next-line require-jsdoc
+function drawGenesisCell(cell, c = color(0, 0, 0, 50)) {
+  const {x, y, z} = cell;
+  fill(c);
+  const f = D/ 20;
+  translate(x, y, z);
+  box(f);
+}
+// eslint-disable-next-line require-jsdoc
+function drawCell(cell, c = color(0, 0, 0, 50)) {
+  const {x, y} = cell;
+  fill(c);
+  const f = D/ 20;
+  translate(f, f);
+  box(f);
+}
+// eslint-disable-next-line require-jsdoc
+function drawGrid(grid) {
+  const genesisCell = {x: 0, y: 0, z: 0};
+  // print('Drawing cells!', grid);
+  // print('Draw genesis!', genesisCell);
+  drawGenesisCell(genesisCell);
+  // const g = grid.map((rowS, y) => {
+  //   const r = rowS.map((row, ri) => {
+  //     row.map((cell, x) => {
+  //       // print('cell?', cell);
+  //       // drawCell(cell, color(2355, 0, 0));
+  //     });
+  //   });
+  // });
+  // return g;
+}
 /**
   Draw screen aligned rectangles on the right side
  * @return {void}
@@ -241,6 +273,17 @@ function getGLInfo() {
  * @return {int}
  */
 function getWeightSize(size) {
+  switch (size) {
+    case 1:
+      // normalize for genesis edge case
+      size = 10;
+      break;
+    case 2:
+      // normalize for genesis edge case
+      size = 5;
+      break;
+  }
+
   return Math.floor(D / size);
 }
 
@@ -254,7 +297,9 @@ function createGrid(size = 1) {
   const base = Array.from(Array(size).keys());
   return base.map((r, y) => {
     return base.map((c, x) => {
-      return {x, y};
+      return base.map((d, z)=> {
+        return {x: x + 1, y: y + 1, z: z + 1};
+      });
     });
   });
 }
