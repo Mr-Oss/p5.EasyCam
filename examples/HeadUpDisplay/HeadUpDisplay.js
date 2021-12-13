@@ -91,7 +91,6 @@ function displayHUD(hudStruct, verbose = false) {
 
   const state = easycam.getState();
   // update hud DOM
-  const element = hudDom;
   if (!verbose) hudStruct = hudStruct.slice(3);
 
   const propsHtml = hudStruct.map((property, index) => {
@@ -162,8 +161,11 @@ function displayIcons() {
 function drawOrientationHelper() {
   strokeWeight(1);
   stroke(255, 32, 0); line(0, 0, 0, 100, 0, 0);
+  stroke(255, 32, 0); line(0, 0, 0, -100, 0, 0);
   stroke(32, 255, 32); line(0, 0, 0, 0, 100, 0);
+  stroke(32, 255, 32); line(0, 0, 0, 0, -100, 0);
   stroke(0, 32, 255); line(0, 0, 0, 0, 0, 100);
+  stroke(0, 32, 255); line(0, 0, 0, 0, 0, -100);
 }
 
 // eslint-disable-next-line require-jsdoc
