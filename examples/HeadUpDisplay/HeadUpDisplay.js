@@ -1,22 +1,27 @@
+/* eslint-disable no-unused-vars */
 
 const D = 500;
 const SIZE = 5;
 const HUD_DATA_STRUCT = [
-  ["gpu_renderer",
-    "wgl_version",
-    "wgl_glsl",
+  ['gpu_renderer',
+    'wgl_version',
+    'wgl_glsl',
 
   ],
   [
-    "Framerate",
-    "Viewport",
-    "Distance",
-    "Center",
-    "Rotation",
-  ]
+    'Framerate',
+    'Viewport',
+    'Distance',
+    'Center',
+    'Rotation',
+  ],
 ];
-let grid, easycam;
+let grid; let easycam;
 
+/**
+ * Setup WEBGL environment with p5.EasyCamera and debugging HUD
+ * @return {void}
+ */
 function setup() {
   // -- create canvas for WEBGL and EasyCam
   pixelDensity(2);
@@ -27,80 +32,72 @@ function setup() {
   // -------
   print(Dw.EasyCam.INFO);
   // ------- init EasyCamp and HUD
-  easycam = new Dw.EasyCam(this._renderer, { distance: 300 });
+  easycam = new Dw.EasyCam(this._renderer, {distance: 300});
   // HUD dom selection
   hudDom = select('#easycamhud');
 
-  initHUD(hudOptions);
+  const hudStruct = initHUD();
+  displayHUD(hudStruct);
 
   grid = createGrid(SIZE);
-  weightSize = getWeightSize(SIZE)
-  print(grid, weightSize);
+  // weightSize = getWeightSize(SIZE);
+  print(hudStruct);
 }
 
-function getWeightSize(size) {
-  return D / size;
-}
-// utility function to get some GL/GLSL/WEBGL information
-function getGLInfo() {
-
-  var gl = this._renderer.GL;
-
-  var info = {};
-  info.gl = gl;
-
-  var debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
-  if (debugInfo) {
-    info.gpu_renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-    info.gpu_vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-  }
-  info.wgl_renderer = gl.getParameter(gl.RENDERER);
-  info.wgl_version = gl.getParameter(gl.VERSION);
-  info.wgl_glsl = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
-  info.wgl_vendor = gl.getParameter(gl.VENDOR);
-
-  return info;
-}
-
+/**
+ * Initialize hud drawing handlers
+ * @return {any}
+ */
 function initHUD() {
-
   const hudDataStructKeys = HUD_DATA_STRUCT;
 
   const info = getGLInfo();
-  const { gpu_renderer, wgl_version, wgl_glsl } = info;
-
-  const viewParamKeyLabels = hudDataStructKeys[1];
-  let fnks = [
-    () => { return nfs(frameRate(), 1, 2); },
-    () => { return nfs(easycam.getViewport()); },
-    () => { return nfs(state.distance, 1, 2); },
-    () => { return nfs(state.center, 1, 2); },
-    () => { return nfs(state.rotation, 1, 3); },
-  ];
-  for (let index in viewMeta) {
-    let textValue = viewMeta[index];
-    print(textValue)
-    createElement('li', '...').parent(ulRight);
-  }
+  const gpuWglParamKeyLabels = HUD_DATA_STRUCT[0];
+  const viewParamKeyLabels = HUD_DATA_STRUCT[1];
+  const gpuWglFnks = _.zip(gpuWglParamKeyLabels, [
+    'gpu_renderer',
+    'wgl_version',
+    'wgl_glsl',
+  ].map((gpuWglParamKey) => {
+    return () => {
+      return info[gpuWglParamKey];
+    };
+  }));
+  const viewFnks = _.zip(viewParamKeyLabels, [
+    () => {
+      return nfs(frameRate(), 1, 2);
+    },
+    () => {
+      return nfs(easycam.getViewport());
+    },
+    () => {
+      return nfs(state.distance, 1, 2);
+    },
+    () => {
+      return nfs(state.center, 1, 2);
+    },
+    () => {
+      return nfs(state.rotation, 1, 3);
+    },
+  ]);
+  return gpuWglFnks.concat(viewFnks);
 }
-function displayHUD(options) {
-  const { minimalView } = options;
+
+function displayHUD(hudStruct) {
   easycam.beginHUD();
 
-  var state = easycam.getState();
-
-  var ul = select('#hud-right');
+  const state = easycam.getState();
 
   // draw screen-aligned rectangles
-  var ny = 10;
-  var off = 20;
-  var rs = (height - off) / ny - off;
-  for (var y = 0; y < ny; y++) {
-    var r = 255 * y / ny;
-    var g = 255 - r;
-    var b = r + g;
-    var px = width - off - rs;
-    var py = off + y * (rs + off);
+  const ny = 10;
+  const off = 20;
+  const rs = (height - off) / ny - off;
+  for (let y = 0; y < ny; y++) {
+    const r = 255 * y / ny;
+    const g = 255 - r;
+    const b = r + g;
+    const px = width - off - rs;
+    const py = off + y * (rs + off);
     noStroke();
     fill(r, g, b);
     rect(px, py, rs, rs);
@@ -108,27 +105,37 @@ function displayHUD(options) {
 
   easycam.endHUD();
 }
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  easycam.setViewport([0, 0, windowWidth, windowHeight]);
+/**
+
+ * @return {void}
+ */
+function displayIcons() {
+  easycam.beginHUD();
+
+  const state = easycam.getState();
+
+  // draw screen-aligned rectangles
+  const ny = 10;
+  const off = 20;
+  const rs = (height - off) / ny - off;
+  for (let y = 0; y < ny; y++) {
+    const r = 255 * y / ny;
+    const g = 255 - r;
+    const b = r + g;
+    const px = width - off - rs;
+    const py = off + y * (rs + off);
+    noStroke();
+    fill(r, g, b);
+    rect(px, py, rs, rs);
+  }
+
+  easycam.endHUD();
 }
 
-
-function createGrid(size = 1) {
-  const base = Array.from(Array(size).keys());
-  return base.map((r, y) => {
-    return base.map((c, x) => {
-      return { x, y }
-    })
-  });
-}
-function drawOrigin() {
-  translate(0, 0, 0);
-  stroke('red');
-  strokeWeight(5);
-  point(0, 0);
-}
-
+/**
+ * Draw p5 frame
+ * @return {void}
+ */
 function draw() {
   background(220);
 
@@ -176,7 +183,74 @@ function draw() {
   sphere(30);
   pop();
 
+  displayIcons();
   // HeadUpDisplay
-  displayHUD(hudOptions);
+  // displayHUD(hudOptions);
+}
 
+/**
+ * Handle viewport on window resize
+ * @return {void}
+ */
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  easycam.setViewport([0, 0, windowWidth, windowHeight]);
+}
+
+/**
+ * Get GL/GLSL/WEBGL information
+ * @return {object}
+ */
+function getGLInfo() {
+  const gl = this._renderer.GL;
+
+  const info = {};
+  info.gl = gl;
+
+  const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+  if (debugInfo) {
+    info.gpu_renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    info.gpu_vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+  }
+  info.wgl_renderer = gl.getParameter(gl.RENDERER);
+  info.wgl_version = gl.getParameter(gl.VERSION);
+  info.wgl_glsl = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
+  info.wgl_vendor = gl.getParameter(gl.VENDOR);
+
+  return info;
+}
+
+/**
+ * Return floored ration of canvas size to defined constant of sections.
+ * @param {int} size
+ * @return {int}
+ */
+function getWeightSize(size) {
+  return Math.floor(D / size);
+}
+
+
+/**
+ * Create multi dimensional cubic data structure, based on intupt
+ * @param {int} size=1
+ * @return {Array<Object>}
+ */
+function createGrid(size = 1) {
+  const base = Array.from(Array(size).keys());
+  return base.map((r, y) => {
+    return base.map((c, x) => {
+      return {x, y};
+    });
+  });
+}
+
+/**
+ * Draw Origin point
+ * @return {void}
+ */
+function drawOrigin() {
+  translate(0, 0, 0);
+  stroke('red');
+  strokeWeight(5);
+  point(0, 0);
 }
