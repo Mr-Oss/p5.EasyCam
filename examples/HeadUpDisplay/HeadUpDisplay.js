@@ -66,19 +66,19 @@ function initHUD(state) {
         };
       }));
   const viewFnks = _.zip(viewParamKeyLabels, [
-    () => {
+    (state) => {
       return nfs(frameRate(), 1, 2);
     },
-    () => {
+    (state, easycam) => {
       return nfs(easycam.getViewport());
     },
-    () => {
+    (state) => {
       return nfs(state.distance, 1, 2);
     },
-    () => {
+    (state) => {
       return nfs(state.center, 1, 2);
     },
-    () => {
+    (state) => {
       return nfs(state.rotation, 1, 3);
     },
   ]);
@@ -96,7 +96,7 @@ function displayHUD(hudStruct, verbose = false) {
 
   const propsHtml = hudStruct.map((property, index) => {
     const [label, fnk] = property;
-    return hudPropTpl({label, value: fnk()});
+    return hudPropTpl({label, value: fnk(state, easycam)});
   });
   hudDom.elt.innerHTML = propsHtml.join('');
   easycam.endHUD();
@@ -126,7 +126,7 @@ function draw() {
 
   displayIcons();
   // HeadUpDisplay
-  // displayHUD(hudOptions);
+  displayHUD(hudStruct);
 }
 
 
