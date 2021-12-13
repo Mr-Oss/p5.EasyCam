@@ -18,5 +18,7 @@
   "bugs": {
     "url": "https://github.com/Mr-Oss/p5.EasyCam/issues"
   },
-  "homepage": "https://github.com/Mr-Oss/p5.EasyCam#readme"
+  "homepage": "https://github.com/Mr-Oss/p5.EasyCam#readme",
+  "devDependencies": {
+  }
 }

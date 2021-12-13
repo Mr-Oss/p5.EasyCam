@@ -1,7 +1,42 @@
-const D = 500;
 
-let grid, easycam, ulLeft, ulRight;
+const D = 500;
 const SIZE = 5;
+const HUD_DATA_STRUCT = [
+  ["gpu_renderer",
+    "wgl_version",
+    "wgl_glsl",
+
+  ],
+  [
+    "Framerate",
+    "Viewport",
+    "Distance",
+    "Center",
+    "Rotation",
+  ]
+];
+let grid, easycam;
+
+function setup() {
+  // -- create canvas for WEBGL and EasyCam
+  pixelDensity(2);
+
+  createCanvas(D, D, WEBGL);
+
+  setAttributes('antialias', true);
+  // -------
+  print(Dw.EasyCam.INFO);
+  // ------- init EasyCamp and HUD
+  easycam = new Dw.EasyCam(this._renderer, { distance: 300 });
+  // HUD dom selection
+  hudDom = select('#easycamhud');
+
+  initHUD(hudOptions);
+
+  grid = createGrid(SIZE);
+  weightSize = getWeightSize(SIZE)
+  print(grid, weightSize);
+}
 
 function getWeightSize(size) {
   return D / size;
@@ -26,61 +61,35 @@ function getGLInfo() {
 
   return info;
 }
-function initHUD(options) {
-  const { minimalView } = options;
 
-  const hudDataStructKeys = [
-    ["gpu_renderer",
-      "wgl_version",
-      "wgl_glsl",
+function initHUD() {
 
-    ],
-    [
-      "Framerate:",
-      "Viewport:",
-      "Distance:",
-      "Center:",
-      "Rotation:",
-    ]
+  const hudDataStructKeys = HUD_DATA_STRUCT;
+
+  const info = getGLInfo();
+  const { gpu_renderer, wgl_version, wgl_glsl } = info;
+
+  const viewParamKeyLabels = hudDataStructKeys[1];
+  let fnks = [
+    () => { return nfs(frameRate(), 1, 2); },
+    () => { return nfs(easycam.getViewport()); },
+    () => { return nfs(state.distance, 1, 2); },
+    () => { return nfs(state.center, 1, 2); },
+    () => { return nfs(state.rotation, 1, 3); },
   ];
-
-  if (!minimalView) {
-    hudDataStructKeys.map(section => {
-      return section.map(key => {
-        return createElement('li', key).parent(UL_LEFT);
-      })
-    })
-
-    const info = getGLInfo();
-    const { gpu_renderer, wgl_version, wgl_glsl } = info;
-    const glMetaValues = { gpu_renderer, wgl_version, wgl_glsl };
-
-    for (let index in glMetaValues) {
-      let textValue = glMetaValues[index];
-      print(minimalView)
-      textValue = '.';
-      createElement('li', textValue || '.').parent(UL_RIGHT);
-    }
-  }
-  const viewMeta = hudDataStructKeys[1];
   for (let index in viewMeta) {
     let textValue = viewMeta[index];
     print(textValue)
-    createElement('li', [textValue, 'Loading...'].join(" ")).parent(ulRight);
+    createElement('li', '...').parent(ulRight);
   }
 }
-function displayHUD() {
+function displayHUD(options) {
+  const { minimalView } = options;
   easycam.beginHUD();
 
   var state = easycam.getState();
 
-  // update list
   var ul = select('#hud-right');
-  ul.elt.children[3].innerHTML = nfs(frameRate(), 1, 2);
-  ul.elt.children[4].innerHTML = nfs(easycam.getViewport(), 1, 0);
-  ul.elt.children[5].innerHTML = nfs(state.distance, 1, 2);
-  ul.elt.children[6].innerHTML = nfs(state.center, 1, 2);
-  ul.elt.children[7].innerHTML = nfs(state.rotation, 1, 3);
 
   // draw screen-aligned rectangles
   var ny = 10;
@@ -103,27 +112,7 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   easycam.setViewport([0, 0, windowWidth, windowHeight]);
 }
-function setup() {
-  // -- create canvas for WEBGL and EasyCam
-  pixelDensity(2);
 
-  createCanvas(D, D, WEBGL);
-
-  setAttributes('antialias', true);
-  // -------
-  print(Dw.EasyCam.INFO);
-  // ------- init EasyCamp and HUD
-  easycam = new Dw.EasyCam(this._renderer, { distance: 300 });
-  // HUD dom selection
-  ulLeft = select('#hud-left');
-  ulRight = select('#hud-right');
-
-  initHUD({ minimalView: true });
-
-  grid = createGrid(SIZE);
-  weightSize = getWeightSize(SIZE)
-  print(grid, weightSize);
-}
 
 function createGrid(size = 1) {
   const base = Array.from(Array(size).keys());
@@ -188,6 +177,6 @@ function draw() {
   pop();
 
   // HeadUpDisplay
-  // displayHUD();
+  displayHUD(hudOptions);
 
 }
