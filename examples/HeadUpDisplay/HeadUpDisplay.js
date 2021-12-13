@@ -16,16 +16,15 @@ const HUD_DATA_STRUCT = [
   ],
 ];
 let grid; let easycam; let hudStruct;
-
 /**
- * Return hml of emmbeded template by it's id using jquery
- * @param {string} id
- * @return {string}
+ * Return hml of emmbeded template by it's id
+ * @param {any} id
+ * @return {any}
  */
-function getEmbededTemplateHtml(id) {
+function getTemplateById(id) {
   return $('#' + id).html();
 }
-const hudPropTpl = _.template();
+const hudPropTpl = _.template(getTemplateById('tpl-hud-prop'));
 /**
  * Setup WEBGL environment with p5.EasyCamera and debugging HUD
  * @return {void}
