@@ -6,7 +6,6 @@ const HUD_DATA_STRUCT = [
   ['gpu_renderer',
     'wgl_version',
     'wgl_glsl',
-
   ],
   [
     'Framerate',
@@ -16,8 +15,12 @@ const HUD_DATA_STRUCT = [
     'Rotation',
   ],
 ];
-let grid; let easycam;
+let grid; let easycam; let hudStruct;
 
+const hudPropTpl =
+  _.template(
+      '<div><span><%= label %></span> : <span><%= value %></span></div>',
+  );
 /**
  * Setup WEBGL environment with p5.EasyCamera and debugging HUD
  * @return {void}
@@ -35,34 +38,33 @@ function setup() {
   easycam = new Dw.EasyCam(this._renderer, {distance: 300});
   // HUD dom selection
   hudDom = select('#easycamhud');
-
-  const hudStruct = initHUD();
+  const state = easycam.getState();
+  hudStruct = initHUD(state);
   displayHUD(hudStruct);
 
   grid = createGrid(SIZE);
   // weightSize = getWeightSize(SIZE);
-  print(hudStruct);
 }
+
 
 /**
  * Initialize hud drawing handlers
+ * @param {object} state - EasyCam state
  * @return {any}
  */
-function initHUD() {
+function initHUD(state) {
   const hudDataStructKeys = HUD_DATA_STRUCT;
 
   const info = getGLInfo();
   const gpuWglParamKeyLabels = HUD_DATA_STRUCT[0];
   const viewParamKeyLabels = HUD_DATA_STRUCT[1];
-  const gpuWglFnks = _.zip(gpuWglParamKeyLabels, [
-    'gpu_renderer',
-    'wgl_version',
-    'wgl_glsl',
-  ].map((gpuWglParamKey) => {
-    return () => {
-      return info[gpuWglParamKey];
-    };
-  }));
+  const gpuWglFnks = _.zip(
+      gpuWglParamKeyLabels,
+      gpuWglParamKeyLabels.map((gpuWglParamKey) => {
+        return () => {
+          return info[gpuWglParamKey];
+        };
+      }));
   const viewFnks = _.zip(viewParamKeyLabels, [
     () => {
       return nfs(frameRate(), 1, 2);
@@ -83,52 +85,18 @@ function initHUD() {
   return gpuWglFnks.concat(viewFnks);
 }
 
+// eslint-disable-next-line require-jsdoc
 function displayHUD(hudStruct) {
   easycam.beginHUD();
 
   const state = easycam.getState();
-
-  // draw screen-aligned rectangles
-  const ny = 10;
-  const off = 20;
-  const rs = (height - off) / ny - off;
-  for (let y = 0; y < ny; y++) {
-    const r = 255 * y / ny;
-    const g = 255 - r;
-    const b = r + g;
-    const px = width - off - rs;
-    const py = off + y * (rs + off);
-    noStroke();
-    fill(r, g, b);
-    rect(px, py, rs, rs);
-  }
-
-  easycam.endHUD();
-}
-/**
-
- * @return {void}
- */
-function displayIcons() {
-  easycam.beginHUD();
-
-  const state = easycam.getState();
-
-  // draw screen-aligned rectangles
-  const ny = 10;
-  const off = 20;
-  const rs = (height - off) / ny - off;
-  for (let y = 0; y < ny; y++) {
-    const r = 255 * y / ny;
-    const g = 255 - r;
-    const b = r + g;
-    const px = width - off - rs;
-    const py = off + y * (rs + off);
-    noStroke();
-    fill(r, g, b);
-    rect(px, py, rs, rs);
-  }
-
+  // update hud DOM
+  const element = hudDom;
+  const propsHtml = hudStruct.map((property, index) => {
+    const [label, fnk] = property;
+    return hudPropTpl({label, value: fnk()});
+  });
+  hudDom.elt.innerHTML = propsHtml.join('');
   easycam.endHUD();
 }
 
@@ -158,6 +126,35 @@ function draw() {
   // HeadUpDisplay
   // displayHUD(hudOptions);
 }
+
+
+/**
+  Draw screen aligned rectangles on the right side
+ * @return {void}
+ */
+function displayIcons() {
+  easycam.beginHUD();
+
+  const state = easycam.getState();
+
+  // draw screen-aligned rectangles
+  const ny = 10;
+  const off = 20;
+  const rs = (height - off) / ny - off;
+  for (let y = 0; y < ny; y++) {
+    const r = 255 * y / ny;
+    const g = 255 - r;
+    const b = r + g;
+    const px = width - off - rs;
+    const py = off + y * (rs + off);
+    noStroke();
+    fill(r, g, b);
+    rect(px, py, rs, rs);
+  }
+
+  easycam.endHUD();
+}
+
 
 // eslint-disable-next-line require-jsdoc
 function drawOrientationHelper() {
