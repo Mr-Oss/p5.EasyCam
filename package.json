@@ -20,5 +20,7 @@
   },
   "homepage": "https://github.com/Mr-Oss/p5.EasyCam#readme",
   "devDependencies": {
+    "eslint": "^8.4.1",
+    "eslint-config-google": "^0.14.0"
   }
 }
