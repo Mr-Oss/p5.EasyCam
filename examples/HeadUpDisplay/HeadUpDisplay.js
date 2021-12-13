@@ -149,12 +149,26 @@ function draw() {
   drawOrigin();
 
   // gizmo
+  drawOrientationHelper();
+
+  // objects
+  // drawObjects();
+
+  displayIcons();
+  // HeadUpDisplay
+  // displayHUD(hudOptions);
+}
+
+// eslint-disable-next-line require-jsdoc
+function drawOrientationHelper() {
   strokeWeight(1);
   stroke(255, 32, 0); line(0, 0, 0, 100, 0, 0);
   stroke(32, 255, 32); line(0, 0, 0, 0, 100, 0);
   stroke(0, 32, 255); line(0, 0, 0, 0, 0, 100);
+}
 
-  // objects
+// eslint-disable-next-line require-jsdoc
+function drawObjects() {
   strokeWeight(0.5);
   stroke(0);
 
@@ -182,10 +196,6 @@ function draw() {
   fill(128);
   sphere(30);
   pop();
-
-  displayIcons();
-  // HeadUpDisplay
-  // displayHUD(hudOptions);
 }
 
 /**
