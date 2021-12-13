@@ -86,12 +86,14 @@ function initHUD(state) {
 }
 
 // eslint-disable-next-line require-jsdoc
-function displayHUD(hudStruct) {
+function displayHUD(hudStruct, verbose = false) {
   easycam.beginHUD();
 
   const state = easycam.getState();
   // update hud DOM
   const element = hudDom;
+  if (!verbose) hudStruct = hudStruct.slice(3);
+
   const propsHtml = hudStruct.map((property, index) => {
     const [label, fnk] = property;
     return hudPropTpl({label, value: fnk()});
