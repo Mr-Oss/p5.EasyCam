@@ -2,7 +2,7 @@
   "name": "p5.easycam",
   "version": "1.0.0",
   "description": "![MultiView](screenshots/RandomBoxes_crop.jpg)",
-  "main": "@micrub/p5.easycam.js",
+  "main": "p5.easycam.js",
   "directories": {
     "example": "examples"
   },
