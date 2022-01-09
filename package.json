@@ -7,6 +7,7 @@
     "example": "examples"
   },
   "scripts": {
+    "lint": "eslint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,7 +21,7 @@
   },
   "homepage": "https://github.com/Mr-Oss/p5.EasyCam#readme",
   "devDependencies": {
-    "eslint": "^8.4.1",
+    "eslint": "^8.6.0",
     "eslint-config-google": "^0.14.0"
   }
 }
