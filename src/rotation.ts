@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import {Vec3} from './vec3';
 //
 // ROTATION (Quaternion)
 //

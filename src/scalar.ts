@@ -25,7 +25,7 @@ export const Scalar = {
   /**
    * modifying t as a function of smootherstep(0,1,t);
    */
-  smootherstep: function(t) {
+  smootherstep: function(x) {
     return x * x * x * (x * (x * 6 - 15) + 10);
   },
 
