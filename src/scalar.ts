@@ -1,5 +1,4 @@
 
-
 /**
  * Scalar as a simple number.
  *

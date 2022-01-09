@@ -1,4 +1,6 @@
 import p5 from 'p5';
+import {Rotation} from './rotation';
+
 /*
  *
  * The p5.EasyCam library - Easy 3D CameraControl for p5.js and WEBGL.

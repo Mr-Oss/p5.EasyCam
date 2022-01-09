@@ -1,5 +1,5 @@
 
-
+import {Scalar} from './scalar';
 /**
  * Vec3 as a 3D vector (Array)
  *
