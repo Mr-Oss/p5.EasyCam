@@ -2,7 +2,7 @@
 ![MultiView](screenshots/RandomBoxes_crop.jpg)
 
 
-## p5.EasyCam
+## p5.EasyCam - Typescript rewrite (for practice)
 
 Simple 3D camera control for [p5js](https://p5js.org/) and the WEBGL renderer.
 
@@ -27,7 +27,6 @@ To get started quickly with EasyCam, take a look at the following tutorial on Op
 npm i @micrub/p5.easycam.js"
 ```
 ---
-
 ### Examples
 
 #### EasyCam.js - Advanced Shader/Lighting
@@ -148,7 +147,6 @@ new Dw.EasyCam(p5.RendererGL, {distance:z, center:[x,y,z]});
   ... 
 ```
 ---
-
 The constructors above return an EasyCam object whose methods are listed below.
 
 ### Camera Methods
@@ -221,7 +219,6 @@ beginHUD(renderer, w, h)
 endHUD(renderer)
 ```
 ---
-
 ### Camera State Object
 
 ---
@@ -235,7 +232,6 @@ let state = {
 easy.setState(state, 1000); // animate to state over the period of 1 second
 ```
 ---
-
 Example: [openprocessing](https://www.openprocessing.org/sketch/622115)
 
 

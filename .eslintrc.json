@@ -1,0 +1,23 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "google"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 13,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "valid-jsdoc":"warn",
+        "require-jsdoc":"warn",
+        "max-len":"warn"
+    },
+    "ignorePatterns": "p5.easycam.js"
+}
